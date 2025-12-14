@@ -1,0 +1,30 @@
+name: Deploy Frontend to Vercel
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'frontend/**' # Chỉ chạy khi code Frontend thay đổi
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install and Build Test
+      run: |
+        cd frontend
+        npm install
+        npm run build 
+        # Bước này để GitHub test xem code có lỗi cú pháp không trước khi deploy
+
+    - name: Trigger Vercel Deploy
+      if: success()
+      run: curl -X POST ${{ secrets.VERCEL_FRONTEND_HOOK }}
