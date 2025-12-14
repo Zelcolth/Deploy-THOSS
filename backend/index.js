@@ -10,6 +10,9 @@ app.use(express.json());
 const port = process.env.PORT || 5000;
 
 // Cấu hình Pool (Hồ bơi kết nối) - Tự động quản lý kết nối đóng/mở
+// Kiểm tra xem có đang dùng TiDB không (dựa vào host)
+const isTiDB = process.env.DB_HOST && process.env.DB_HOST.includes('tidbcloud');
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
@@ -18,7 +21,9 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  // Dòng quan trọng mới thêm: Nếu là TiDB thì bật SSL, còn ở Local (Docker) thì tắt
+  ssl: isTiDB ? { minVersion: 'TLSv1.2', rejectUnauthorized: true } : undefined
 });
 
 // Kiểm tra kết nối lúc khởi động (để log ra terminal cho vui)
