@@ -1,0 +1,39 @@
+name: Deploy Backend to Render
+
+on:
+  push:
+    branches: [ "main" ] # Chỉ chạy khi có code push lên nhánh main
+    paths:
+      - 'backend/**'     # Chỉ chạy khi code trong thư mục backend thay đổi
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Lấy code về máy ảo của GitHub
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 2. Cài đặt môi trường Node.js để test
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    # 3. Thử cài đặt thư viện (Test xem file package.json có lỗi không)
+    - name: Install Dependencies
+      run: |
+        cd backend
+        npm install
+
+    # 4. (Tùy chọn) Chạy test nếu có
+    # - name: Run Test
+    #   run: |
+    #     cd backend
+    #     npm test
+
+    # 5. Gọi Deploy Hook của Render (Chỉ chạy nếu các bước trên thành công)
+    - name: Trigger Render Deploy
+      if: success()
+      run: curl -X POST ${{ secrets.RENDER_BACKEND_HOOK }}
