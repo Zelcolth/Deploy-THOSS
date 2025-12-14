@@ -1,0 +1,15 @@
+# --- Giai đoạn 1: Build Code ---
+FROM node:18-alpine as build-stage
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+# Tạo ra thư mục /app/build chứa file tĩnh
+RUN npm run build
+
+# --- Giai đoạn 2: Chạy Web Server (Nginx) ---
+FROM nginx:alpine
+# Copy file đã build ở giai đoạn 1 vào thư mục nginx
+COPY --from=build-stage /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
