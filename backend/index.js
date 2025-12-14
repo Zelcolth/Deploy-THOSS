@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
   res.send('Backend Node.js đang chạy ổn định!');
 });
 
-// API lấy danh sách user
+// API lấy danh sách users
 app.get('/api/users', (req, res) => {
   // Dùng pool.query thì nó sẽ tự lấy kết nối sống để chạy lệnh
   pool.query('SELECT * FROM users', (err, results) => {
