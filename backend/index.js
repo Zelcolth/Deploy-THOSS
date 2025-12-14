@@ -31,7 +31,7 @@ pool.getConnection((err, connection) => {
   if (err) {
     console.error('Cảnh báo: Chưa kết nối được DB ngay lập tức (Docker đang khởi động MySQL...).');
   } else {
-    console.log('Kết nối thành công tới Database MySQL!');
+    console.log('Kết nối thành công tới Database MySQL!!!');
     connection.release(); // Trả kết nối về hồ
   }
 });
