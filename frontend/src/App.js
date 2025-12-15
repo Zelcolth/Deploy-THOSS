@@ -15,7 +15,7 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial" }}>
-      <h1>Danh sách User (Project 1)</h1>
+      <h1>Danh sách User (Project 1) - Chiều Thứ Hai - Ca3 - Thực hành OSS</h1>
       <p>Backend URL: {API_URL}</p>
       <ul>
         {users.length > 0 ? (
